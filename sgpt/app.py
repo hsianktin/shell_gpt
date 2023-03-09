@@ -18,6 +18,7 @@ from pathlib import Path
 from getpass import getpass
 from tempfile import NamedTemporaryFile
 from typing import Callable
+import sys
 
 import typer
 
@@ -177,6 +178,12 @@ def main(
     animation: bool = typer.Option(True, help="Typewriter animation."),
     spinner: bool = typer.Option(True, help="Show loading spinner during API request."),
 ) -> None:
+    if not sys.stdin.isatty():
+        lines = sys.stdin.readlines()
+        if len(lines) > 0:
+            prompt = prompt + "\n" + " ".join(lines)
+    #print(prompt)
+
     if list_chat:
         echo_chat_ids()
         return
